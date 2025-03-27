@@ -1,23 +1,14 @@
 mod programs;
 
-use solana_client::rpc_client::RpcClient;
-use solana_program::{pubkey::Pubkey, system_instruction::transfer};
-use solana_sdk::hash::hash;
-use solana_sdk::{
-    message::Message,
-    signature::{Keypair, Signer, read_keypair_file},
-    system_instruction,
-    transaction::Transaction,
-};
 use std::io::{self, BufRead};
-use std::str::FromStr;
-use solana_sdk::system_program;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }
 
 pub fn get_key_pair() -> (String, [u8; 64]) {
+    use solana_sdk::signature::{Keypair, Signer};
+
     let kp = Keypair::new();
     let pubkey = kp.pubkey().to_string();
     let bytes_array = kp.to_bytes();
@@ -103,6 +94,9 @@ mod tests {
 
     #[test]
     fn airdrop() {
+        use solana_client::rpc_client::RpcClient;
+        use solana_sdk::{signature::read_keypair_file, signer::Signer};
+
         const RPC_URL: &str = "https://api.devnet.solana.com";
 
         // Import our keypair
@@ -125,6 +119,13 @@ mod tests {
 
     #[test]
     fn transfer_sol() {
+        use solana_client::rpc_client::RpcClient;
+        use solana_sdk::{
+            hash::hash, pubkey::Pubkey, signature::read_keypair_file, signer::Signer,
+            system_instruction::transfer, transaction::Transaction,
+        };
+        use std::str::FromStr;
+
         const RPC_URL: &str = "https://api.devnet.solana.com";
 
         // Import our keypair
@@ -174,6 +175,13 @@ mod tests {
 
     #[test]
     fn clear_wallet() {
+        use solana_client::rpc_client::RpcClient;
+        use solana_sdk::{
+            message::Message, pubkey::Pubkey, signature::read_keypair_file, signer::Signer,
+            system_instruction, transaction::Transaction,
+        };
+        use std::str::FromStr;
+
         let rpc_client = RpcClient::new("https://api.devnet.solana.com".to_string());
 
         // Import our keypair
@@ -233,6 +241,7 @@ mod tests {
     fn enroll() {
         use crate::programs::turbin3_prereq::{CompleteArgs, Turbin3PrereqProgram};
         use solana_client::rpc_client::RpcClient;
+        use solana_sdk::{signature::read_keypair_file, signer::Signer, system_program};
 
         // Constants
         const RPC_URL: &str = "https://api.devnet.solana.com";
